@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Terminal } from 'lucide-react';
 
 interface CodeBlockProps {
   code: string | string[];
@@ -33,7 +33,6 @@ export function CodeBlock({
 
   const codeLines = Array.isArray(code) ? code : code.split('\n');
   
-  // Use default code examples if no custom code provided
   const displayLines = codeLines.length > 0 && codeLines[0] 
     ? codeLines 
     : [codeExamples[activeTab].install, codeExamples[activeTab].init];
@@ -46,66 +45,82 @@ export function CodeBlock({
   };
 
   return (
-    <div className="bg-background-tertiary border border-border overflow-hidden">
-      {/* Tab bar */}
-      <div className="flex items-center justify-between border-b border-border bg-background-secondary px-4 py-2">
-        <div className="flex gap-4">
-          <button
-            onClick={() => setActiveTab('python')}
-            className={cn(
-              'text-sm font-mono transition-colors',
-              activeTab === 'python' 
-                ? 'text-accent-green' 
-                : 'text-text-muted hover:text-text-secondary'
-            )}
-          >
-            Python
-          </button>
-          <button
-            onClick={() => setActiveTab('typescript')}
-            className={cn(
-              'text-sm font-mono transition-colors',
-              activeTab === 'typescript' 
-                ? 'text-accent-green' 
-                : 'text-text-muted hover:text-text-secondary'
-            )}
-          >
-            TypeScript
-          </button>
-        </div>
-        
-        {showCopy && (
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1 text-text-muted hover:text-accent-green transition-colors"
-            aria-label="Copy code"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span className="text-xs">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                <span className="text-xs">Copy</span>
-              </>
-            )}
-          </button>
-        )}
-      </div>
-
-      {/* Code content */}
-      <div className="p-4 font-mono text-code">
-        {(activeTab === language ? displayLines : [codeExamples[activeTab].install, codeExamples[activeTab].init]).map((line, i) => (
-          <div key={i} className="flex items-start">
-            <span className="text-accent-green mr-2 select-none">{prompt}</span>
-            <span className="text-text-primary">{line}</span>
-            {i === (activeTab === language ? displayLines.length : 2) - 1 && (
-              <span className="cursor-blink ml-1" />
-            )}
+    <div className="relative group">
+      {/* Glow effect on hover */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
+      
+      <div className="relative glass-card rounded-xl overflow-hidden">
+        {/* Header with tabs */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-background-tertiary/50">
+          <div className="flex items-center gap-3">
+            <Terminal className="w-4 h-4 text-text-muted" />
+            <div className="flex gap-1 p-1 bg-background-primary/50 rounded-lg">
+              <button
+                onClick={() => setActiveTab('python')}
+                className={cn(
+                  'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
+                  activeTab === 'python' 
+                    ? 'bg-accent-primary/20 text-accent-primary' 
+                    : 'text-text-muted hover:text-text-secondary'
+                )}
+              >
+                Python
+              </button>
+              <button
+                onClick={() => setActiveTab('typescript')}
+                className={cn(
+                  'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
+                  activeTab === 'typescript' 
+                    ? 'bg-accent-secondary/20 text-accent-secondary' 
+                    : 'text-text-muted hover:text-text-secondary'
+                )}
+              >
+                TypeScript
+              </button>
+            </div>
           </div>
-        ))}
+          
+          {showCopy && (
+            <button
+              onClick={handleCopy}
+              className={cn(
+                'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200',
+                copied 
+                  ? 'bg-accent-success/20 text-accent-success' 
+                  : 'bg-background-primary/50 text-text-muted hover:text-text-primary'
+              )}
+              aria-label="Copy code"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Code content */}
+        <div className="p-4 font-mono text-code bg-background-primary/30">
+          {(activeTab === language ? displayLines : [codeExamples[activeTab].install, codeExamples[activeTab].init]).map((line, i) => (
+            <div key={i} className="flex items-start py-1">
+              <span className={cn(
+                'mr-3 select-none',
+                activeTab === 'python' ? 'text-accent-primary' : 'text-accent-secondary'
+              )}>{prompt}</span>
+              <span className="text-text-primary">{line}</span>
+              {i === (activeTab === language ? displayLines.length : 2) - 1 && (
+                <span className="cursor-blink" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

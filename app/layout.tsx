@@ -1,17 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ScanlineOverlay } from "@/components/effects";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { GridPattern } from "@/components/effects";
 
 export const metadata: Metadata = {
   title: "Mycelio.ai - The Gig Economy for Silicon-Based Life",
@@ -32,8 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ScanlineOverlay />
+      <body className="antialiased">
+        <GridPattern />
         {children}
       </body>
     </html>
