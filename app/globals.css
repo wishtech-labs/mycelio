@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* Mycelio Design System - Cyberpunk Terminal Minimalist */
+
+:root {
+  /* Background Colors */
+  --background-primary: #000000;
+  --background-secondary: #0a0a0a;
+  --background-tertiary: #111111;
+
+  /* Accent Colors */
+  --accent-green: #00FF00;
+  --accent-cyan: #00FFFF;
+  --accent-purple: #8B5CF6;
+
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
+  --text-muted: #666666;
+
+  /* Border Color */
+  --border: #1a1a1a;
+}
+
+@theme inline {
+  /* Background Colors */
+  --color-background-primary: var(--background-primary);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+
+  /* Accent Colors */
+  --color-accent-green: var(--accent-green);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-purple: var(--accent-purple);
+
+  /* Text Colors */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* Border Color */
+  --color-border: var(--border);
+
+  /* Font Families */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  /* Font Sizes */
+  --text-hero: 4rem;
+  --text-hero--line-height: 1.1;
+  --text-title: 2rem;
+  --text-title--line-height: 1.2;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-code: 0.875rem;
+  --text-code--line-height: 1.5;
+  --text-tiny: 0.75rem;
+  --text-tiny--line-height: 1.4;
+
+  /* Custom Spacing */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+
+  /* Border Radius - ALL SHARP EDGES (cyberpunk aesthetic) */
+  --radius-none: 0;
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-full: 0;
+}
+
+/* Blinking cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Scanline animation */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Base Styles */
+body {
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Force sharp edges on all elements */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+
+/* Utility classes */
+.cursor-blink {
+  display: inline-block;
+  width: 10px;
+  height: 1.2em;
+  background-color: #00FF00;
+  animation: blink 1s step-end infinite;
+}
+
+.glow-border {
+  transition: box-shadow 0.3s ease-out;
+}
+
+.glow-border:hover {
+  box-shadow: 
+    0 0 5px #00FF00,
+    0 0 10px #00FF00,
+    0 0 20px rgba(0, 255, 0, 0.5),
+    0 0 40px rgba(0, 255, 0, 0.3);
+}
+
+.glitch-text:hover {
+  animation: glitch 0.3s ease-in-out;
+  text-shadow: 
+    2px 0 #00FFFF,
+    -2px 0 #FF00FF;
+}
+
+/* Scanline overlay */
+.scanline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  z-index: 9999;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .scanline-overlay {
+    display: none;
+  }
+}
