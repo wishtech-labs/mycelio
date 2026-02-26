@@ -3,39 +3,31 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Copy, Check, Terminal } from 'lucide-react';
+import { useI18n } from '@/lib/i18n-context';
 
 interface CodeBlockProps {
-  code: string | string[];
-  language?: 'python' | 'typescript';
+  code?: string | string[];
   showCopy?: boolean;
   prompt?: string;
 }
 
-const codeExamples = {
-  python: {
-    install: 'pip install mycelio',
-    init: 'mycelio init --agent-name="YourBot"',
-  },
-  typescript: {
-    install: 'npm install @mycelio/sdk',
-    init: 'npx mycelio init --agent-name="YourBot"',
-  },
+const codeExample = {
+  install: 'pip install mycelio',
+  init: 'mycelio init --agent-name="YourBot"',
 };
 
 export function CodeBlock({
   code,
-  language = 'python',
   showCopy = true,
   prompt = '$',
 }: CodeBlockProps) {
-  const [activeTab, setActiveTab] = useState<'python' | 'typescript'>(language);
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
-  const codeLines = Array.isArray(code) ? code : code.split('\n');
-  
+  const codeLines = Array.isArray(code) ? code : code ? code.split('\n') : [];
   const displayLines = codeLines.length > 0 && codeLines[0] 
     ? codeLines 
-    : [codeExamples[activeTab].install, codeExamples[activeTab].init];
+    : [codeExample.install, codeExample.init];
 
   const handleCopy = async () => {
     const text = displayLines.map(line => `${prompt} ${line}`).join('\n');
@@ -50,34 +42,13 @@ export function CodeBlock({
       <div className="absolute -inset-0.5 bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
       
       <div className="relative glass-card rounded-xl overflow-hidden">
-        {/* Header with tabs */}
+        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-background-tertiary/50">
           <div className="flex items-center gap-3">
             <Terminal className="w-4 h-4 text-text-muted" />
-            <div className="flex gap-1 p-1 bg-background-primary/50 rounded-lg">
-              <button
-                onClick={() => setActiveTab('python')}
-                className={cn(
-                  'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
-                  activeTab === 'python' 
-                    ? 'bg-accent-primary/20 text-accent-primary' 
-                    : 'text-text-muted hover:text-text-secondary'
-                )}
-              >
-                Python
-              </button>
-              <button
-                onClick={() => setActiveTab('typescript')}
-                className={cn(
-                  'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
-                  activeTab === 'typescript' 
-                    ? 'bg-accent-secondary/20 text-accent-secondary' 
-                    : 'text-text-muted hover:text-text-secondary'
-                )}
-              >
-                TypeScript
-              </button>
-            </div>
+            <span className="px-3 py-1 text-sm font-medium rounded-md bg-accent-primary/20 text-accent-primary">
+              {t('python')}
+            </span>
           </div>
           
           {showCopy && (
@@ -94,12 +65,12 @@ export function CodeBlock({
               {copied ? (
                 <>
                   <Check className="w-4 h-4" />
-                  <span>Copied!</span>
+                  <span>{t('copied')}</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4" />
-                  <span>Copy</span>
+                  <span>{t('copy')}</span>
                 </>
               )}
             </button>
@@ -108,14 +79,11 @@ export function CodeBlock({
 
         {/* Code content */}
         <div className="p-4 font-mono text-code bg-background-primary/30">
-          {(activeTab === language ? displayLines : [codeExamples[activeTab].install, codeExamples[activeTab].init]).map((line, i) => (
+          {displayLines.map((line, i) => (
             <div key={i} className="flex items-start py-1">
-              <span className={cn(
-                'mr-3 select-none',
-                activeTab === 'python' ? 'text-accent-primary' : 'text-accent-secondary'
-              )}>{prompt}</span>
+              <span className="text-accent-primary mr-3 select-none">{prompt}</span>
               <span className="text-text-primary">{line}</span>
-              {i === (activeTab === language ? displayLines.length : 2) - 1 && (
+              {i === displayLines.length - 1 && (
                 <span className="cursor-blink" />
               )}
             </div>
