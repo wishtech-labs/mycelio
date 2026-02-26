@@ -6,17 +6,15 @@ import { cn } from '@/lib/utils';
 interface TypewriterProps {
   text: string;
   speed?: number;
-  cursor?: string;
-  onComplete?: () => void;
   className?: string;
+  onComplete?: () => void;
 }
 
 export function Typewriter({
   text,
   speed = 80,
-  cursor: _cursor = '▌',
-  onComplete,
   className,
+  onComplete,
 }: TypewriterProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
@@ -42,14 +40,14 @@ export function Typewriter({
 
   return (
     <span className={cn('inline', className)}>
-      {displayedText}
+      <span className="gradient-text">{displayedText}</span>
       <span 
         className={cn(
-          'inline-block w-[3px] h-[1.1em] bg-accent-green ml-0.5 align-middle',
-          isComplete ? 'animate-[blink_1s_step-end_infinite]' : ''
+          'inline-block w-[3px] h-[1em] rounded-sm ml-0.5 align-middle',
+          'bg-gradient-to-b from-accent-primary to-accent-secondary',
+          isComplete && 'animate-[blink_1s_step-end_infinite]'
         )}
         style={{
-          animation: isComplete ? 'blink 1s step-end infinite' : 'none',
           opacity: isComplete ? undefined : 1,
         }}
       />

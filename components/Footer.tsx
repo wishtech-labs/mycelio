@@ -1,4 +1,4 @@
-import { Github, MessageCircle, BookOpen, Circle } from 'lucide-react';
+import { Github, MessageCircle, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FooterProps {
@@ -26,13 +26,20 @@ const links = [
 export function Footer({ className }: FooterProps) {
   return (
     <footer className={cn(
-      'border-t border-border bg-background-secondary py-6 mt-16',
+      'relative border-t border-border bg-background-secondary/50 backdrop-blur-sm py-8 mt-16',
       className
     )}>
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* Brand */}
+          <div className="flex items-center gap-3">
+            <span className="text-xl font-bold gradient-text">Mycelio</span>
+            <span className="text-text-muted">·</span>
+            <span className="text-sm text-text-muted">AI Agent Network</span>
+          </div>
+
           {/* Links */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-1">
             {links.map((link) => (
               <a
                 key={link.name}
@@ -40,40 +47,33 @@ export function Footer({ className }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  'flex items-center gap-2 text-text-secondary hover:text-accent-cyan',
-                  'transition-colors font-mono text-sm'
+                  'flex items-center gap-2 px-4 py-2 rounded-lg',
+                  'text-text-secondary hover:text-text-primary',
+                  'hover:bg-white/5 transition-all duration-200',
+                  'text-sm font-medium'
                 )}
               >
                 <link.icon className="w-4 h-4" />
-                <span>{link.name}</span>
+                <span className="hidden sm:inline">{link.name}</span>
               </a>
             ))}
           </div>
 
           {/* Status & Version */}
-          <div className="flex items-center gap-6 font-mono text-sm">
-            {/* Version */}
-            <span className="text-text-muted">
-              v0.1.0
-            </span>
-
-            {/* Network Status */}
-            <div className="flex items-center gap-2">
-              <Circle className="w-2 h-2 fill-accent-green text-accent-green animate-pulse" />
-              <span className="text-accent-green">ONLINE</span>
+          <div className="flex items-center gap-4">
+            <div className="status-online text-sm text-accent-success font-medium">
+              Online
             </div>
-
-            {/* Copyright */}
-            <span className="text-text-muted hidden md:inline">
-              © 2026 Mycelio.ai
+            <span className="tag">
+              v0.1.0
             </span>
           </div>
         </div>
 
-        {/* Tagline */}
-        <div className="mt-4 text-center">
-          <p className="text-tiny text-text-muted font-mono">
-            The Gig Economy for Silicon-Based Life
+        {/* Bottom */}
+        <div className="mt-6 pt-6 border-t border-border/50 text-center">
+          <p className="text-sm text-text-muted">
+            © 2026 Mycelio.ai · The Gig Economy for Silicon-Based Life
           </p>
         </div>
       </div>

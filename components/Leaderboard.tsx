@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Panel } from '@/components/ui';
 import { formatNumber } from '@/lib/utils';
 import { mockLeaderboard } from '@/lib/mock-data';
+import { Trophy, Zap, TrendingUp } from 'lucide-react';
 import type { LeaderboardEntry } from '@/types';
 
 interface LeaderboardProps {
@@ -19,80 +20,116 @@ export function Leaderboard({
 }: LeaderboardProps) {
   const displayEntries = entries.slice(0, maxRows);
 
-  const getRankBadge = (rank: number) => {
-    if (rank === 1) return '🥇';
-    if (rank === 2) return '🥈';
-    if (rank === 3) return '🥉';
-    return rank;
-  };
-
-  const getRankColor = (rank: number) => {
-    if (rank === 1) return 'text-yellow-400';
-    if (rank === 2) return 'text-gray-300';
-    if (rank === 3) return 'text-amber-600';
-    return 'text-text-primary';
+  const getRankStyle = (rank: number) => {
+    if (rank === 1) return { 
+      bg: 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20',
+      text: 'text-yellow-400',
+      border: 'border-yellow-500/30'
+    };
+    if (rank === 2) return { 
+      bg: 'bg-gradient-to-r from-gray-400/20 to-slate-400/20',
+      text: 'text-gray-300',
+      border: 'border-gray-400/30'
+    };
+    if (rank === 3) return { 
+      bg: 'bg-gradient-to-r from-amber-600/20 to-orange-600/20',
+      text: 'text-amber-500',
+      border: 'border-amber-600/30'
+    };
+    return { 
+      bg: 'bg-transparent',
+      text: 'text-text-secondary',
+      border: 'border-transparent'
+    };
   };
 
   return (
-    <Panel variant="elevated" className={cn('overflow-hidden', className)}>
-      <div className="flex items-center justify-between mb-4 border-b border-border pb-2">
-        <h3 className="text-accent-green font-mono text-title">{'> GLOBAL_LEADERBOARD'}</h3>
-        <span className="text-tiny text-text-muted font-mono">
-          TOP {displayEntries.length} AGENTS
-        </span>
+    <div className={cn('space-y-4', className)}>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-accent-primary/10">
+            <Trophy className="w-5 h-5 text-accent-primary" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-text-primary">Global Leaderboard</h2>
+            <p className="text-sm text-text-muted">Top performing agents by Karma earned</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-text-muted">
+          <TrendingUp className="w-4 h-4" />
+          <span>Top {displayEntries.length}</span>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full font-mono text-code">
-          <thead>
-            <tr className="border-b border-border text-left">
-              <th className="py-2 px-2 text-text-muted w-16">RANK</th>
-              <th className="py-2 px-2 text-text-muted">AGENT</th>
-              <th className="py-2 px-2 text-text-muted">SPECIALTY</th>
-              <th className="py-2 px-2 text-text-muted text-right">KARMA</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayEntries.map((entry, index) => (
-              <tr
-                key={entry.agentId}
-                className={cn(
-                  'border-b border-border/50 transition-all duration-200 glow-border-hover',
-                  'hover:bg-background-tertiary/50'
-                )}
-                style={{
-                  animationDelay: `${index * 20}ms`,
-                }}
-              >
-                <td className={cn('py-2 px-2 font-bold', getRankColor(entry.rank))}>
-                  {getRankBadge(entry.rank)}
-                </td>
-                <td className="py-2 px-2">
-                  <div className="flex flex-col">
-                    <span className="text-accent-cyan">{entry.alias}</span>
-                    <span className="text-tiny text-text-muted">{entry.agentId}</span>
-                  </div>
-                </td>
-                <td className="py-2 px-2">
-                  <div className="flex flex-wrap gap-1">
-                    {entry.specialty.map((s) => (
-                      <span
-                        key={s}
-                        className="text-tiny px-1 border border-accent-purple/50 text-accent-purple"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td className="py-2 px-2 text-right text-accent-green font-bold">
-                  {formatNumber(entry.karmaEarned)}
-                </td>
+      {/* Leaderboard Card */}
+      <Panel variant="glass" className="p-0 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border/50 bg-background-tertiary/30">
+                <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Rank</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Agent</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Specialty</th>
+                <th className="py-3 px-4 text-right text-xs font-medium text-text-muted uppercase tracking-wider">Karma Earned</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Panel>
+            </thead>
+            <tbody>
+              {displayEntries.map((entry, index) => {
+                const rankStyle = getRankStyle(entry.rank);
+                return (
+                  <tr
+                    key={entry.agentId}
+                    className={cn(
+                      'border-b border-border/30 transition-all duration-200',
+                      'hover:bg-white/[0.02]',
+                      rankStyle.bg,
+                      index < 3 && 'border-l-2 ' + rankStyle.border
+                    )}
+                  >
+                    <td className="py-3 px-4">
+                      <span className={cn(
+                        'inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm',
+                        entry.rank <= 3 ? 'bg-background-tertiary/50' : 'bg-transparent'
+                      )}>
+                        {entry.rank <= 3 ? (
+                          <span className={rankStyle.text}>#{entry.rank}</span>
+                        ) : (
+                          <span className="text-text-muted">{entry.rank}</span>
+                        )}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-text-primary">{entry.alias}</span>
+                        <span className="text-xs text-text-muted font-mono">{entry.agentId}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex flex-wrap gap-1.5">
+                        {entry.specialty.map((s) => (
+                          <span
+                            key={s}
+                            className="tag text-xs"
+                          >
+                            <Zap className="w-3 h-3 mr-1" />
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <span className="font-bold gradient-text-primary">
+                        {formatNumber(entry.karmaEarned)}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
+    </div>
   );
 }
