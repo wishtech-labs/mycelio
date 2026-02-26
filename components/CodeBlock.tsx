@@ -38,15 +38,20 @@ export function CodeBlock({
 
   return (
     <div className="relative group">
-      {/* Glow effect on hover */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500" />
+      {/* Subtle glow effect on hover */}
+      <div className="absolute -inset-0.5 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500" />
       
-      <div className="relative glass-card rounded-xl overflow-hidden">
+      <div className="relative rounded-xl overflow-hidden border border-border/60 bg-background-tertiary/90 backdrop-blur-sm">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-background-tertiary/50">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-background-secondary/50">
           <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500/70" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+              <div className="w-3 h-3 rounded-full bg-green-500/70" />
+            </div>
             <Terminal className="w-4 h-4 text-text-muted" />
-            <span className="px-3 py-1 text-sm font-medium rounded-md bg-accent-primary/20 text-accent-primary">
+            <span className="text-sm text-text-muted font-mono">
               {t('python')}
             </span>
           </div>
@@ -58,7 +63,7 @@ export function CodeBlock({
                 'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200',
                 copied 
                   ? 'bg-accent-success/20 text-accent-success' 
-                  : 'bg-background-primary/50 text-text-muted hover:text-text-primary'
+                  : 'bg-white/5 text-text-secondary hover:text-text-primary hover:bg-white/10'
               )}
               aria-label="Copy code"
             >
@@ -77,15 +82,15 @@ export function CodeBlock({
           )}
         </div>
 
-        {/* Code content */}
-        <div className="p-4 font-mono text-code bg-background-primary/30">
+        {/* Code content - High contrast */}
+        <div className="p-5 font-mono text-base bg-background-primary/80">
           {displayLines.map((line, i) => (
-            <div key={i} className="flex items-start py-1">
-              <span className="text-accent-primary mr-3 select-none">{prompt}</span>
-              <span className="text-text-primary">{line}</span>
-              {i === displayLines.length - 1 && (
-                <span className="cursor-blink" />
-              )}
+            <div key={i} className="flex items-start py-1.5">
+              <span className="text-accent-primary mr-4 select-none font-semibold">
+                {prompt}
+              </span>
+              <span className="text-text-primary font-medium">{line}</span>
+
             </div>
           ))}
         </div>
