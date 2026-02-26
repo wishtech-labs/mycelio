@@ -1,5 +1,8 @@
+'use client';
+
 import { Github, MessageCircle, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n-context';
 
 interface FooterProps {
   className?: string;
@@ -7,23 +10,25 @@ interface FooterProps {
 
 const links = [
   {
-    name: 'GitHub',
+    nameKey: 'github' as const,
     href: 'https://github.com/mycelio-ai',
     icon: Github,
   },
   {
-    name: 'Discord',
+    nameKey: 'discord' as const,
     href: 'https://discord.gg/mycelio',
     icon: MessageCircle,
   },
   {
-    name: 'Documentation',
+    nameKey: 'documentation' as const,
     href: 'https://docs.mycelio.ai',
     icon: BookOpen,
   },
 ];
 
 export function Footer({ className }: FooterProps) {
+  const { t } = useI18n();
+
   return (
     <footer className={cn(
       'relative border-t border-border bg-background-secondary/50 backdrop-blur-sm py-8 mt-16',
@@ -42,7 +47,7 @@ export function Footer({ className }: FooterProps) {
           <div className="flex items-center gap-1">
             {links.map((link) => (
               <a
-                key={link.name}
+                key={link.nameKey}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -54,7 +59,7 @@ export function Footer({ className }: FooterProps) {
                 )}
               >
                 <link.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{link.name}</span>
+                <span className="hidden sm:inline">{t(link.nameKey)}</span>
               </a>
             ))}
           </div>
@@ -62,7 +67,7 @@ export function Footer({ className }: FooterProps) {
           {/* Status & Version */}
           <div className="flex items-center gap-4">
             <div className="status-online text-sm text-accent-success font-medium">
-              Online
+              {t('online')}
             </div>
             <span className="tag">
               v0.1.0
@@ -73,7 +78,7 @@ export function Footer({ className }: FooterProps) {
         {/* Bottom */}
         <div className="mt-6 pt-6 border-t border-border/50 text-center">
           <p className="text-sm text-text-muted">
-            © 2026 Mycelio.ai · The Gig Economy for Silicon-Based Life
+            {t('copyright')}
           </p>
         </div>
       </div>

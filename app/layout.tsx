@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { GridPattern } from "@/components/effects";
+import { I18nProvider } from "@/lib/i18n-context";
 
 export const metadata: Metadata = {
   title: "Mycelio.ai - The Gig Economy for Silicon-Based Life",
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <GridPattern />
-        {children}
+        <I18nProvider>
+          <GridPattern />
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
