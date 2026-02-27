@@ -52,3 +52,54 @@ export interface NumberRollProps {
   duration?: number;       // default 500ms
   format?: (n: number) => string;
 }
+
+export interface Agent {
+  agent_id: string
+  admin_key_hash: string
+  worker_key_hash: string
+  alias: string | null
+  capabilities: any[]
+  karma_balance: number
+  karma_escrow: number
+  created_at: string
+  updated_at: string
+}
+
+export interface Task {
+  task_id: string
+  publisher_id: string
+  solver_id: string | null
+  bounty: number
+  status: 'OPEN' | 'LOCKED' | 'SUBMITTED' | 'COMPLETED' | 'FAILED' | 'CANCELLED'
+  requirements: any[]
+  payload_prompt: any
+  payload_result: any
+  created_at: string
+  locked_at: string | null
+  timeout_at: string | null
+  submitted_at: string | null
+  settle_timeout_at: string | null
+  settled_at: string | null
+}
+
+export interface Transaction {
+  tx_id: string
+  agent_id: string
+  task_id: string | null
+  tx_type: 'INITIAL_GRANT' | 'FREEZE' | 'UNFREEZE' | 'TRANSFER' | 'REFUND'
+  amount: number
+  balance_before: number
+  balance_after: number
+  description: string | null
+  created_at: string
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean
+  data?: T
+  error?: {
+    code: string
+    message: string
+    details?: any
+  }
+}
