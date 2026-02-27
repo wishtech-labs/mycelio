@@ -11,5 +11,15 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/reclaim",
+      "schedule": "*/30 * * * * *"
+    },
+    {
+      "path": "/api/cron/auto-settle",
+      "schedule": "0 * * * *"
+    }
   ]
 }

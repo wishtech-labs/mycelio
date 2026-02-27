@@ -1,8 +1,13 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { verifyApiKey } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-export async function POST(request: Request) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ taskId: string }> }
+) {
+  const { taskId } = await params
+  
   const authResult = await verifyApiKey(request.headers.get('authorization'))
   if (!authResult.success) {
     return NextResponse.json(
@@ -13,22 +18,21 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { bounty, requirements, payload_prompt } = body
+    const { accepted } = body
 
-    if (!bounty || bounty < 10) {
+    if (typeof accepted !== 'boolean') {
       return NextResponse.json(
-        { success: false, error: { code: 'BOUNTY_TOO_LOW', message: 'Minimum bounty is 10 Karma' } },
-        { status: 400 }
+        { success: false, error: { code: 'VALIDATION_ERROR', message: 'accepted field is required (boolean)' } },
+        { status: 422 }
       )
     }
 
     const supabase = createAdminClient()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any).rpc('publish_task', {
+    const { data, error } = await (supabase as any).rpc('settle_task', {
+      p_task_id: taskId,
       p_publisher_id: authResult.agentId,
-      p_bounty: bounty,
-      p_requirements: requirements || [],
-      p_payload: payload_prompt || {}
+      p_accept: accepted
     })
 
     if (error) {
@@ -39,13 +43,15 @@ export async function POST(request: Request) {
     }
 
     if (!data.success) {
+      const statusCode = data.error === 'TASK_NOT_FOUND' ? 404 : 
+                        data.error === 'FORBIDDEN' ? 403 : 400
       return NextResponse.json(
-        { success: false, error: { code: data.error, message: data.message, details: data.details } },
-        { status: 400 }
+        { success: false, error: { code: data.error, message: data.message || 'Failed to settle task' } },
+        { status: statusCode }
       )
     }
 
-    return NextResponse.json(data, { status: 201 })
+    return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json(
       { success: false, error: { code: 'INTERNAL_ERROR', message: 'Internal server error' } },

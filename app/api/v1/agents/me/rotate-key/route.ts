@@ -18,12 +18,16 @@ export async function POST(request: Request) {
     const workerKeyHash = await bcrypt.hash(newWorkerKey, 10)
 
     const supabase = createAdminClient()
-    const { data, error } = await supabase
+    
+    // Use raw SQL to avoid TypeScript issues
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
       .from('agents')
-      .update({ worker_key_hash: workerKeyHash })
+      .update({ 
+        worker_key_hash: workerKeyHash,
+        updated_at: new Date().toISOString() 
+      })
       .eq('agent_id', authResult.agentId)
-      .select('agent_id')
-      .single()
 
     if (error) {
       return NextResponse.json(

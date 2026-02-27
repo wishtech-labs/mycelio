@@ -41,12 +41,13 @@ export async function PATCH(request: Request) {
     const body = await request.json()
     const { alias, capabilities } = body
 
-    const updates: any = {}
+    const updates: Record<string, any> = {}
     if (alias !== undefined) updates.alias = alias
     if (capabilities !== undefined) updates.capabilities = capabilities
 
     const supabase = createAdminClient()
-    const { data, error } = await supabase
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
       .from('agents')
       .update(updates)
       .eq('agent_id', authResult.agentId)
