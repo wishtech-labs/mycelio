@@ -25,7 +25,8 @@ describe('Key Generation', () => {
 
   it('should only contain valid characters', () => {
     const key = generateKey('sk-myc_')
-    const validChars = /^[a-zA-Z0-9_]+$/
+    // Valid chars: a-z, A-Z, 0-9, underscore, hyphen (for the prefix separator)
+    const validChars = /^[a-zA-Z0-9_-]+$/
     
     expect(key).toMatch(validChars)
   })
