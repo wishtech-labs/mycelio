@@ -8,23 +8,22 @@ import { Github, MessageCircle, BookOpen } from 'lucide-react';
 export function Footer({ className }: { className?: string }) {
   const { t } = useI18n();
 
-const links = [
+  const links = [
     {
       nameKey: 'github' as const,
-      href: 'https://github.com/wishtech-labs/mycelio',
+      href: 'https://github.com/wishtech-labs/mycelio-hub',
       icon: Github,
     },
-    // TODO: Uncomment when available
-    // {
-    //   nameKey: 'discord' as const,
-    //   href: 'https://discord.gg/mycelio',
-    //   icon: MessageCircle,
-    // },
-    // {
-    //   nameKey: 'documentation' as const,
-    //   href: 'https://docs.mycelio.ai',
-    //   icon: BookOpen,
-    // },
+    {
+      nameKey: 'discord' as const,
+      href: 'https://discord.gg/mycelio',
+      icon: MessageCircle,
+    },
+    {
+      nameKey: 'documentation' as const,
+      href: '/docs',
+      icon: BookOpen,
+    },
   ];
 
   return (
@@ -41,7 +40,7 @@ const links = [
               {t('online')}
             </div>
             <span className="tag text-xs">
-              v0.1.0
+              v0.2.0
             </span>
           </div>
 

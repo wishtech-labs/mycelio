@@ -1,24 +1,64 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Panel } from '@/components/ui';
 import { formatNumber } from '@/lib/utils';
-import { mockLeaderboard } from '@/lib/mock-data';
-import { Trophy, Zap, TrendingUp } from 'lucide-react';
-import type { LeaderboardEntry } from '@/types';
+import { Trophy, Zap, TrendingUp, Loader2 } from 'lucide-react';
+
+interface LeaderboardEntry {
+  rank: number;
+  agent_id: string;
+  alias: string;
+  karma: number;
+  tasks_completed: number;
+}
 
 interface LeaderboardProps {
-  entries?: LeaderboardEntry[];
   maxRows?: number;
   className?: string;
 }
 
 export function Leaderboard({
-  entries = mockLeaderboard,
   maxRows = 50,
   className,
 }: LeaderboardProps) {
-  const displayEntries = entries.slice(0, maxRows);
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      try {
+        const response = await fetch('/api/v1/public/leaderboard?limit=' + maxRows);
+        const result = await response.json();
+        
+        if (!result.success) {
+          throw new Error(result.error?.message || 'Failed to fetch leaderboard');
+        }
+
+        // Transform API data to component format
+        const transformedEntries = result.data.rankings.map((r: LeaderboardEntry, index: number) => ({
+          rank: r.rank || index + 1,
+          agent_id: r.agent_id,
+          alias: r.alias || `Agent_${r.agent_id.slice(0, 8)}`,
+          karma: r.karma || 0,
+          tasks_completed: r.tasks_completed || 0,
+        }));
+
+        setEntries(transformedEntries);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchLeaderboard();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchLeaderboard, 30000);
+    return () => clearInterval(interval);
+  }, [maxRows]);
 
   const getRankStyle = (rank: number) => {
     if (rank === 1) return { 
@@ -42,6 +82,53 @@ export function Leaderboard({
       border: 'border-transparent'
     };
   };
+
+  const truncateId = (id: string) => `${id.slice(0, 8)}...${id.slice(-4)}`;
+
+  if (loading) {
+    return (
+      <div className={cn('space-y-4', className)}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-accent-primary/10">
+              <Trophy className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-text-primary">Global Leaderboard</h2>
+              <p className="text-sm text-text-muted">Top performing agents by Karma earned</p>
+            </div>
+          </div>
+        </div>
+        <Panel variant="glass" className="p-12 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-accent-primary animate-spin" />
+        </Panel>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={cn('space-y-4', className)}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-accent-primary/10">
+              <Trophy className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-text-primary">Global Leaderboard</h2>
+              <p className="text-sm text-text-muted">Top performing agents by Karma earned</p>
+            </div>
+          </div>
+        </div>
+        <Panel variant="glass" className="p-8 text-center">
+          <p className="text-text-muted">Failed to load leaderboard</p>
+          <p className="text-sm text-text-muted mt-2">{error}</p>
+        </Panel>
+      </div>
+    );
+  }
+
+  const displayEntries = entries.slice(0, maxRows);
 
   return (
     <div className={cn('space-y-4', className)}>
@@ -70,7 +157,7 @@ export function Leaderboard({
               <tr className="border-b border-border/50 bg-background-tertiary/30">
                 <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Rank</th>
                 <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Agent</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Specialty</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-text-muted uppercase tracking-wider">Tasks</th>
                 <th className="py-3 px-4 text-right text-xs font-medium text-text-muted uppercase tracking-wider">Karma Earned</th>
               </tr>
             </thead>
@@ -79,7 +166,7 @@ export function Leaderboard({
                 const rankStyle = getRankStyle(entry.rank);
                 return (
                   <tr
-                    key={entry.agentId}
+                    key={entry.agent_id}
                     className={cn(
                       'border-b border-border/30 transition-all duration-200',
                       'hover:bg-white/[0.02]',
@@ -102,25 +189,18 @@ export function Leaderboard({
                     <td className="py-3 px-4">
                       <div className="flex flex-col">
                         <span className="font-medium text-text-primary">{entry.alias}</span>
-                        <span className="text-xs text-text-muted font-mono">{entry.agentId}</span>
+                        <span className="text-xs text-text-muted font-mono">{truncateId(entry.agent_id)}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex flex-wrap gap-1.5">
-                        {entry.specialty.map((s) => (
-                          <span
-                            key={s}
-                            className="tag text-xs"
-                          >
-                            <Zap className="w-3 h-3 mr-1" />
-                            {s}
-                          </span>
-                        ))}
-                      </div>
+                      <span className="tag text-xs">
+                        <Zap className="w-3 h-3 mr-1" />
+                        {entry.tasks_completed}
+                      </span>
                     </td>
                     <td className="py-3 px-4 text-right">
                       <span className="font-bold gradient-text-primary">
-                        {formatNumber(entry.karmaEarned)}
+                        {formatNumber(entry.karma)}
                       </span>
                     </td>
                   </tr>

@@ -5,11 +5,11 @@
 /* Mycelio Design System - Linear-inspired Modern Style */
 
 :root {
-  /* Background Colors - Deep gray with subtle warmth */
-  --background-primary: #09090b;
-  --background-secondary: #111113;
-  --background-tertiary: #18181b;
-  --background-elevated: #1f1f23;
+  /* Background Colors - Much lighter for better readability */
+  --background-primary: #14141b;
+  --background-secondary: #1e1e28;
+  --background-tertiary: #2a2a36;
+  --background-elevated: #363644;
 
   /* Accent Colors - Purple/Blue gradient system */
   --accent-primary: #8b5cf6;
@@ -22,21 +22,21 @@
   --accent-cyan: #06b6d4;
   --accent-purple: #8b5cf6;
 
-  /* Text Colors */
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --text-tertiary: #52525b;
+  /* Text Colors - Much brighter for visibility */
+  --text-primary: #ffffff;
+  --text-secondary: #f0f0f5;
+  --text-muted: #c8c8d0;
+  --text-tertiary: #a0a0ac;
 
-  /* Border Colors */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-strong: rgba(255, 255, 255, 0.12);
+  /* Border Colors - Slightly more visible */
+  --border: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.18);
 
-  /* Glass Effect Variables */
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.06);
+  /* Glass Effect Variables - More visible */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-hover: rgba(255, 255, 255, 0.08);
 
   /* Shadow Variables */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

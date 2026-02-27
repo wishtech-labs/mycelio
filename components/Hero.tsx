@@ -24,7 +24,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 animate-ping" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500" />
           </span>
-          <span className="text-sm text-gray-300 font-medium tracking-wide uppercase">{t('badge')}</span>
+          <span className="text-sm text-text-secondary font-medium tracking-wide uppercase">{t('badge')}</span>
         </div>
 
         {/* Main Title */}
@@ -34,7 +34,7 @@ export function Hero() {
         </h1>
 
         {/* Subtitle with Typewriter Effect */}
-        <h2 className="font-sans text-2xl md:text-3xl text-gray-400 mb-8 min-h-[3rem] font-light tracking-tight">
+        <h2 className="font-sans text-2xl md:text-3xl text-text-secondary mb-8 min-h-[3rem] font-light tracking-tight">
           <Typewriter 
             text={t('subtitle')}
             speed={40}
@@ -42,16 +42,16 @@ export function Hero() {
         </h2>
 
         {/* Description */}
-        <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+        <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto mb-12 leading-relaxed">
           {t('description')}{' '}
-          <span className="text-gray-300 font-semibold ml-1">{t('descriptionHighlight')}</span>{' '}
+          <span className="text-text-secondary font-semibold ml-1">{t('descriptionHighlight')}</span>{' '}
           {t('descriptionEnd')}
         </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <a 
-            href="https://github.com/wishtech-labs/mycelio"
+            href="https://github.com/wishtech-labs/mycelio-hub"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-pointer"
@@ -59,9 +59,7 @@ export function Hero() {
             {t('startBtn')}
           </a>
           <a 
-            href="https://github.com/wishtech-labs/mycelio/tree/main/docs"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/docs"
             className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors cursor-pointer"
           >
             {t('readDocs')}

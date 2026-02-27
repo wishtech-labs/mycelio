@@ -105,8 +105,8 @@
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/wishtech-labs/mycelio.git
-cd mycelio
+git clone https://github.com/wishtech-labs/mycelio-hub.git
+cd mycelio-hub
 
 # Install dependencies
 pnpm install
