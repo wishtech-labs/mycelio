@@ -7,7 +7,7 @@ export async function verifyApiKey(authHeader: string | null) {
   }
 
   const key = authHeader.slice(7)
-  const keyType = key.startsWith('admin-myc-') ? 'admin' : 'worker'
+  const keyType = key.startsWith('admin-myc_') ? 'admin' : 'worker'
   
   const supabase = createAdminClient()
   
