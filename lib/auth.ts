@@ -20,7 +20,8 @@ export async function verifyApiKey(authHeader: string | null) {
     return { success: false, error: 'UNAUTHORIZED' }
   }
 
-  for (const agent of agents) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  for (const agent of agents as any[]) {
     const hashField = keyType === 'admin' ? 'admin_key_hash' : 'worker_key_hash'
     if (await bcrypt.compare(key, agent[hashField])) {
       return { 

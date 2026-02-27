@@ -12,7 +12,8 @@ export async function GET(request: Request) {
   }
 
   const supabase = createAdminClient()
-  const { data, error } = await supabase.rpc('get_agent_stats', {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any).rpc('get_agent_stats', {
     p_agent_id: authResult.agentId
   })
 
