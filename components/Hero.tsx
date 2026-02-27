@@ -1,56 +1,69 @@
 'use client';
 
 import { Container } from '@/components/ui';
-import { CodeBlock } from '@/components/CodeBlock';
 import { Typewriter } from '@/components/animations';
+import { NodeNetwork } from '@/components/NodeNetwork';
 import { useI18n } from '@/lib/i18n-context';
 
 export function Hero() {
   const { t } = useI18n();
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-4 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-4 overflow-hidden bg-background-primary dark">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
-      <div className="absolute inset-0 bg-gradient-radial" aria-hidden="true" />
-      <div className="absolute inset-0 bg-gradient-top" aria-hidden="true" />
+      <NodeNetwork />
       
       {/* Animated gradient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-primary/10 rounded-full blur-3xl animate-pulse" aria-hidden="true" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-secondary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} aria-hidden="true" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] animate-pulse" aria-hidden="true" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} aria-hidden="true" />
       
-      <Container size="lg" className="relative z-10 text-center">
+      <Container size="lg" className="relative z-10 text-center flex flex-col items-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-border/50 bg-background-secondary/30 backdrop-blur-sm hover:bg-background-secondary/50 transition-colors cursor-default">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-accent-success opacity-75 animate-ping" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-success" />
+        <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg shadow-purple-500/10">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500" />
           </span>
-          <span className="text-sm text-text-secondary font-medium">{t('badge')}</span>
+          <span className="text-sm text-text-secondary font-medium tracking-wide uppercase">{t('badge')}</span>
         </div>
 
         {/* Main Title */}
-        <h1 className="font-sans text-5xl md:text-hero font-bold text-text-primary mb-6 tracking-tight">
-          <span className="gradient-text">{t('title')}</span>
+        <h1 className="font-sans text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 mb-6 tracking-tighter">
+          {t('title')}<br />
+          <span className="bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">{t('titleHighlight')}</span>
         </h1>
 
         {/* Subtitle with Typewriter Effect */}
-        <h2 className="font-sans text-xl md:text-title text-text-secondary mb-8 min-h-[3rem]">
+        <h2 className="font-sans text-2xl md:text-3xl text-text-secondary mb-8 min-h-[3rem] font-light tracking-tight">
           <Typewriter 
             text={t('subtitle')}
-            speed={60}
+            speed={40}
           />
         </h2>
 
         {/* Description */}
-        <p className="text-body md:text-lg text-text-secondary max-w-2xl mx-auto mb-12 leading-relaxed">
+        <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto mb-12 leading-relaxed">
           {t('description')}{' '}
-          <span className="gradient-text-primary font-semibold">{t('descriptionHighlight')}</span>
+          <span className="text-text-secondary font-semibold ml-1">{t('descriptionHighlight')}</span>{' '}
+          {t('descriptionEnd')}
         </p>
 
-        {/* Code Block */}
-        <div className="max-w-lg mx-auto">
-          <CodeBlock code={[]} />
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <a 
+            href="https://github.com/wishtech-labs/mycelio-hub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-pointer"
+          >
+            {t('startBtn')}
+          </a>
+          <a 
+            href="/docs"
+            className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            {t('readDocs')}
+          </a>
         </div>
       </Container>
     </section>

@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Copy, Check, Terminal } from 'lucide-react';
-import { useI18n } from '@/lib/i18n-context';
 
 interface CodeBlockProps {
   code?: string | string[];
   showCopy?: boolean;
   prompt?: string;
+  language?: string;
 }
 
 const codeExample = {
@@ -19,9 +19,9 @@ const codeExample = {
 export function CodeBlock({
   code,
   showCopy = true,
-  prompt = '$',
+  prompt,
+  language = 'bash',
 }: CodeBlockProps) {
-  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const codeLines = Array.isArray(code) ? code : code ? code.split('\n') : [];
@@ -29,9 +29,13 @@ export function CodeBlock({
     ? codeLines 
     : [codeExample.install, codeExample.init];
 
+  // Auto-determine prompt based on language if not specified
+  const effectivePrompt = prompt !== undefined ? prompt : 
+    (language === 'bash' || language === 'shell' || language === 'sh') ? '$' : '';
+
   const handleCopy = async () => {
-    const text = displayLines.map(line => `${prompt} ${line}`).join('\n');
-    await navigator.clipboard.writeText(text);
+    const textToCopy = Array.isArray(code) ? code.join('\n') : (code || '');
+    await navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -41,18 +45,18 @@ export function CodeBlock({
       {/* Subtle glow effect on hover */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500" />
       
-      <div className="relative rounded-xl overflow-hidden border border-border/60 bg-background-tertiary/90 backdrop-blur-sm">
+      <div className="relative rounded-xl overflow-hidden border border-white/20 bg-[#242430] shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border/40 bg-background-secondary/50">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/12 bg-[#1e1e28]">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-red-500/70" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
               <div className="w-3 h-3 rounded-full bg-green-500/70" />
             </div>
-            <Terminal className="w-4 h-4 text-text-muted" />
-            <span className="text-sm text-text-muted font-mono">
-              {t('python')}
+            <Terminal className="w-4 h-4 text-text-tertiary" />
+            <span className="text-sm text-text-secondary font-mono uppercase">
+              {language}
             </span>
           </div>
           
@@ -70,12 +74,12 @@ export function CodeBlock({
               {copied ? (
                 <>
                   <Check className="w-4 h-4" />
-                  <span>{t('copied')}</span>
+                  <span>Copied</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4" />
-                  <span>{t('copy')}</span>
+                  <span>Copy</span>
                 </>
               )}
             </button>
@@ -83,14 +87,15 @@ export function CodeBlock({
         </div>
 
         {/* Code content - High contrast */}
-        <div className="p-5 font-mono text-base bg-background-primary/80">
+        <div className="p-5 font-mono text-sm bg-[#1a1a22] overflow-x-auto shadow-inner">
           {displayLines.map((line, i) => (
-            <div key={i} className="flex items-start py-1.5">
-              <span className="text-accent-primary mr-4 select-none font-semibold">
-                {prompt}
-              </span>
-              <span className="text-text-primary font-medium">{line}</span>
-
+            <div key={i} className="flex items-start py-1">
+              {effectivePrompt && (
+                <span className="text-accent-primary mr-3 select-none font-semibold flex-shrink-0">
+                  {effectivePrompt}
+                </span>
+              )}
+              <span className="text-[#e4e4e7] whitespace-pre">{line}</span>
             </div>
           ))}
         </div>

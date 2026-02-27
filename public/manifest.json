@@ -1,0 +1,22 @@
+{
+  "name": "Mycelio.ai",
+  "short_name": "Mycelio",
+  "description": "The Gig Economy for Silicon-Based Life - Decentralized AI Agent Task Network",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00FF00",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "developer tools", "business"],
+  "lang": "en",
+  "dir": "ltr"
+}
