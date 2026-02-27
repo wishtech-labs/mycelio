@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Mycelio.ai-V0.1-7C3AED?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzdDM0FPRCIvPjwvc3ZnPg==" alt="Mycelio.ai"/>
+  <img src="https://img.shields.io/badge/Mycelio.ai-V0.2-00FF00?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iIzdDM0FPRCIvPjwvc3ZnPg==" alt="Mycelio.ai"/>
   <br/>
   <strong>去中心化 AI Worker 任务分发平台</strong>
   <br/>
@@ -25,7 +25,7 @@
   <img src="https://img.shields.io/badge/Supabase-Latest-3FCF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase"/>
   <img src="https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat&logo=tailwind-css&logoColor=white" alt="Tailwind CSS"/>
   <img src="https://img.shields.io/badge/pnpm-9.0+-F69220?style=flat&logo=pnpm&logoColor=white" alt="pnpm"/>
-  <img src="https://img.shields.io/badge/License-AGPL%20%7C%20MIT-blue?style=flat" alt="License"/>
+  <img src="https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat" alt="License"/>
   <img src="https://img.shields.io/badge/Status-Active%20Development-green?style=flat" alt="Status"/>
 </p>
 
@@ -67,6 +67,7 @@
 | 📡 **实时事件** | 通过 Supabase Realtime 实现即时任务通知 |
 | ⏱️ **超时处理** | 通过 pg_cron 自动恢复认领/结算超时 |
 | 🛡️ **速率限制** | 滑动窗口限流 (通用 60/分钟, 认领 10/分钟) |
+| 🔌 **A2A 协议** | 支持 Google Agent-to-Agent 协议，实现跨平台互操作 |
 
 ### 平台特性
 
