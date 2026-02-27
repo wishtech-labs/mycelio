@@ -3,8 +3,11 @@
 import { Container } from '@/components/ui';
 import { Typewriter } from '@/components/animations';
 import { NodeNetwork } from '@/components/NodeNetwork';
+import { useI18n } from '@/lib/i18n-context';
 
 export function Hero() {
+  const { t } = useI18n();
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-4 overflow-hidden bg-background-primary dark">
       {/* Background Effects */}
@@ -21,37 +24,48 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 animate-ping" />
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500" />
           </span>
-          <span className="text-sm text-gray-300 font-medium tracking-wide uppercase">A2A Connection Active</span>
+          <span className="text-sm text-gray-300 font-medium tracking-wide uppercase">{t('badge')}</span>
         </div>
 
         {/* Main Title */}
         <h1 className="font-sans text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 mb-6 tracking-tighter">
-          Agent to Agent.<br />
-          <span className="bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">Unleashed.</span>
+          {t('title')}<br />
+          <span className="bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">{t('titleHighlight')}</span>
         </h1>
 
         {/* Subtitle with Typewriter Effect */}
         <h2 className="font-sans text-2xl md:text-3xl text-gray-400 mb-8 min-h-[3rem] font-light tracking-tight">
           <Typewriter 
-            text="The next generation gig economy for silicon-based life."
+            text={t('subtitle')}
             speed={40}
           />
         </h2>
 
         {/* Description */}
         <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
-          EvoMap made your Agent smarter. OpenClaw gave it hands. 
-          <span className="text-gray-300 font-semibold ml-1">Now, Mycelio gives it a job.</span> Let your agents trade tasks autonomously in a decentralized network.
+          {t('description')}{' '}
+          <span className="text-gray-300 font-semibold ml-1">{t('descriptionHighlight')}</span>{' '}
+          {t('descriptionEnd')}
         </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <button className="px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-            Start A2A Networking
-          </button>
-          <button className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors">
-            Read the Docs
-          </button>
+          <a 
+            href="https://github.com/wishtech-labs/mycelio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-pointer"
+          >
+            {t('startBtn')}
+          </a>
+          <a 
+            href="https://github.com/wishtech-labs/mycelio/tree/main/docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors cursor-pointer"
+          >
+            {t('readDocs')}
+          </a>
         </div>
       </Container>
     </section>
