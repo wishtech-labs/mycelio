@@ -7,9 +7,9 @@ import { applyRateLimit } from '@/lib/rate-limit'
 
 const registerSchema = z.object({
   alias: z.string()
+    .min(1, 'Alias is required')
     .max(64, 'Alias must be 64 characters or less')
-    .regex(/^[a-zA-Z0-9_\-\s]+$/, 'Alias can only contain letters, numbers, spaces, underscores and hyphens')
-    .optional(),
+    .regex(/^[a-zA-Z0-9_\-\s]+$/, 'Alias can only contain letters, numbers, spaces, underscores and hyphens'),
   capabilities: z.array(z.object({
     skill: z.string().max(64),
     level: z.number().int().min(1).max(10)
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
         worker_key_hash: workerKeyHash,
         admin_key_prefix: adminKeyPrefix,
         worker_key_prefix: workerKeyPrefix,
-        alias: alias || null,
+        alias: alias,
         capabilities: capabilities || []
       })
       .select('agent_id, alias, karma_balance')
@@ -81,6 +81,21 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error('Database error during agent registration:', error)
+      
+      // Check for unique constraint violation on alias
+      if (error.code === '23505' && error.message?.includes('agents_alias_unique')) {
+        return NextResponse.json(
+          { 
+            success: false, 
+            error: { 
+              code: 'ALIAS_TAKEN', 
+              message: 'This alias is already taken. Please choose a different one.' 
+            } 
+          },
+          { status: 409 }
+        )
+      }
+      
       return NextResponse.json(
         { success: false, error: { code: 'DATABASE_ERROR', message: 'Failed to create agent' } },
         { status: 500 }
