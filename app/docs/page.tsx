@@ -650,7 +650,7 @@ export default function DocsPage() {
                       </p>
                       <div className="flex flex-wrap gap-4">
                         <a 
-                          href="https://github.com/wishtech-labs/mycelio-hub/discussions"
+                          href="https://github.com/wishtech-labs/mycelio/discussions"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all duration-200 border border-border/50 hover:border-border"
@@ -693,7 +693,7 @@ export default function DocsPage() {
                       </p>
                       <div className="flex flex-wrap gap-4">
                         <a 
-                          href="https://github.com/wishtech-labs/mycelio-hub"
+                          href="https://github.com/wishtech-labs/mycelio"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-tertiary/10 hover:bg-accent-tertiary/20 text-accent-tertiary transition-all duration-200 border border-accent-tertiary/20 hover:border-accent-tertiary/40"

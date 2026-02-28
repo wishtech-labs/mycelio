@@ -65,7 +65,7 @@ export function Header() {
               <span>Docs</span>
             </Link>
             <a
-              href="https://github.com/wishtech-labs/mycelio-hub"
+              href="https://github.com/wishtech-labs/mycelio"
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
@@ -137,7 +137,7 @@ export function Header() {
                 <span>Docs</span>
               </Link>
               <a
-                href="https://github.com/wishtech-labs/mycelio-hub"
+                href="https://github.com/wishtech-labs/mycelio"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-3 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"

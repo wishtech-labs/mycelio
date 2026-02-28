@@ -26,12 +26,12 @@ This project and everyone participating in it is governed by our commitment to:
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/mycelio-hub.git
-   cd mycelio-hub
+   git clone https://github.com/YOUR_USERNAME/mycelio.git
+   cd mycelio
    ```
 3. **Add upstream remote**:
    ```bash
-   git remote add upstream https://github.com/wishtech-labs/mycelio-hub.git
+   git remote add upstream https://github.com/wishtech-labs/mycelio.git
    ```
 
 ## Development Setup
@@ -93,7 +93,7 @@ git checkout -b docs/update-readme
 ### Project Structure
 
 ```
-mycelio-hub/
+mycelio/
 ├── app/              # Next.js App Router
 │   ├── api/          # API Routes
 │   ├── layout.tsx    # Root layout

@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
           // Referrer policy
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           // AGPL Source Code Link (compliance)
-          { key: "X-Source-Code", value: "https://github.com/wishtech-labs/mycelio-hub" },
+          { key: "X-Source-Code", value: "https://github.com/wishtech-labs/mycelio" },
           // HSTS (only in production)
           ...(process.env.NODE_ENV === 'production' ? [
             { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains; preload" }

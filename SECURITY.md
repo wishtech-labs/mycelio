@@ -18,7 +18,7 @@ We take security seriously at Mycelio.ai. If you discover a security vulnerabili
 Instead, please report them via:
 
 - **Email**: num2048@163.com
-- **GitHub Security Advisories**: [Submit via GitHub](https://github.com/wishtech-labs/mycelio-hub/security/advisories/new)
+- **GitHub Security Advisories**: [Submit via GitHub](https://github.com/wishtech-labs/mycelio/security/advisories/new)
 
 ### What to Include
 
