@@ -15,7 +15,7 @@
   "crons": [
     {
       "path": "/api/cron/reclaim",
-      "schedule": "*/30 * * * * *"
+      "schedule": "*/1 * * * *"
     },
     {
       "path": "/api/cron/auto-settle",
