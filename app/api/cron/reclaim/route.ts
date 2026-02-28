@@ -1,26 +1,23 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyCronRequest } from '@/lib/cron-auth'
 
 /**
  * Cron job to reclaim timed-out LOCKED tasks
  * Called by Vercel Cron every 30 seconds
  */
 export async function GET(request: Request) {
-  // Verify Cron Secret
-  const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json(
-      { success: false, error: { code: 'UNAUTHORIZED', message: 'Invalid cron secret' } },
-      { status: 401 }
-    )
+  // Verify Cron request
+  const authResult = verifyCronRequest(request)
+  if (!authResult.success) {
+    return authResult.response
   }
 
   try {
     const supabase = createAdminClient()
     
     // Call RPC to reclaim timeout tasks
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: reclaimedCount, error } = await (supabase as any).rpc('reclaim_timeout_tasks')
+    const { data: reclaimedCount, error } = await supabase.rpc('reclaim_timeout_tasks')
 
     if (error) {
       console.error('Failed to reclaim timeout tasks:', error)

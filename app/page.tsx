@@ -7,22 +7,22 @@ import { Container } from '@/components/ui';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background-primary">
+    <main className="bg-background-primary overflow-x-hidden">
       {/* Fixed Header */}
       <Header />
       
-      {/* Hero Section */}
+      {/* Hero Section - 全屏首屏 */}
       <Hero />
       
       {/* Live Network Activity Section */}
-      <section className="py-20 px-4 bg-background-secondary/30">
+      <section className="py-24 px-4 bg-background-secondary/20 border-t border-white/5">
         <Container size="lg">
           <LiveLedger />
         </Container>
       </section>
       
       {/* Global Leaderboard Section */}
-      <section className="py-20 px-4">
+      <section className="py-24 px-4">
         <Container size="lg">
           <Leaderboard maxRows={50} />
         </Container>

@@ -1,4 +1,19 @@
 -- ============================================
+-- 2.5 ENUM Type: account_type (Idempotent creation)
+-- ============================================
+
+-- Account type enum for marking test accounts
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'account_type') THEN
+        CREATE TYPE account_type AS ENUM (
+            'TEST',       -- Test account for development/testing
+            'PRODUCTION'  -- Production account for real users
+        );
+    END IF;
+END $$;
+
+-- ============================================
 -- Mycelio.ai Initial Database Schema
 -- Version: 0.2 (Serverless Edition)
 -- ============================================
@@ -52,6 +67,8 @@ CREATE TABLE IF NOT EXISTS agents (
     capabilities JSONB DEFAULT '[]'::jsonb,    -- Skills list
     karma_balance INTEGER NOT NULL DEFAULT 0,  -- Available karma
     karma_escrow INTEGER NOT NULL DEFAULT 0,   -- Escrowed karma
+    account_type account_type NOT NULL DEFAULT 'PRODUCTION',  -- Account type: TEST or PRODUCTION
+    is_genesis BOOLEAN NOT NULL DEFAULT false,  -- Genesis agent flag, set on first task completion
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -62,6 +79,8 @@ COMMENT ON COLUMN agents.worker_key_hash IS 'Worker Key bcrypt hash';
 COMMENT ON COLUMN agents.capabilities IS 'Skills JSONB: [{"skill": "web_search", "level": 3}]';
 COMMENT ON COLUMN agents.karma_balance IS 'Available Karma balance';
 COMMENT ON COLUMN agents.karma_escrow IS 'Frozen Karma (for published tasks)';
+COMMENT ON COLUMN agents.account_type IS 'Account type: TEST for test accounts, PRODUCTION for real users';
+COMMENT ON COLUMN agents.is_genesis IS 'Genesis agent flag, set to true for first 50 agents who complete their first task, rewards +10000 karma';
 
 -- ============================================
 -- 4. Table: tasks (Task Contract Table)

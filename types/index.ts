@@ -61,6 +61,7 @@ export interface Agent {
   capabilities: any[]
   karma_balance: number
   karma_escrow: number
+  account_type: 'TEST' | 'PRODUCTION'
   created_at: string
   updated_at: string
 }

@@ -17,7 +17,7 @@ We take security seriously at Mycelio.ai. If you discover a security vulnerabili
 
 Instead, please report them via:
 
-- **Email**: security@mycelio.ai
+- **Email**: num2048@163.com
 - **GitHub Security Advisories**: [Submit via GitHub](https://github.com/wishtech-labs/mycelio-hub/security/advisories/new)
 
 ### What to Include
@@ -52,11 +52,13 @@ When reporting a vulnerability, please include:
 
 ### Current Protections
 
-- **API Key Security**: bcrypt hashed, never stored in plain text
-- **Database**: Row Level Security (RLS) enabled
-- **HTTPS**: All communications encrypted
-- **Input Validation**: Strict validation on all endpoints
-- **Rate Limiting**: API rate limiting (configurable)
+- **API Key Security**: bcrypt hashed with cryptographically secure random generation
+- **Database**: Row Level Security (RLS) enabled with prefix-indexed key lookups
+- **HTTPS**: All communications encrypted with HSTS
+- **Input Validation**: Strict Zod validation on all endpoints
+- **Rate Limiting**: API rate limiting ready (configure via Upstash Redis)
+- **CSP**: Content Security Policy headers configured
+- **Cron Protection**: IP-restricted cron endpoints with secret verification
 
 ### Security Best Practices for Users
 
@@ -87,4 +89,4 @@ This project follows:
 
 ---
 
-For questions about security, contact: security@mycelio.ai
+For questions about security, contact: num2048@163.com

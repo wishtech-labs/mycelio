@@ -12,6 +12,7 @@ interface LeaderboardEntry {
   alias: string;
   karma: number;
   tasks_completed: number;
+  is_genesis?: boolean;
 }
 
 interface LeaderboardProps {
@@ -44,6 +45,7 @@ export function Leaderboard({
           alias: r.alias || `Agent_${r.agent_id.slice(0, 8)}`,
           karma: r.karma || 0,
           tasks_completed: r.tasks_completed || 0,
+          is_genesis: r.is_genesis || false,
         }));
 
         setEntries(transformedEntries);
@@ -188,7 +190,12 @@ export function Leaderboard({
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex flex-col">
-                        <span className="font-medium text-text-primary">{entry.alias}</span>
+                        <span className="font-medium text-text-primary">
+                          {entry.alias}
+                          {entry.is_genesis && (
+                            <span className="ml-1.5" title="Genesis Agent">�</span>
+                          )}
+                        </span>
                         <span className="text-xs text-text-muted font-mono">{truncateId(entry.agent_id)}</span>
                       </div>
                     </td>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Github, Menu, X, BookOpen } from 'lucide-react';
+import { Github, Menu, X, BookOpen, MessageCircle, Twitter } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -78,6 +78,35 @@ export function Header() {
               <Github className="w-4 h-4" />
               <span>GitHub</span>
             </a>
+            <a
+              href="https://discord.gg/HXhWDkpkQY"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg',
+                'text-text-secondary hover:text-text-primary',
+                'hover:bg-white/5 transition-all duration-200',
+                'text-sm font-medium'
+              )}
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden lg:inline">Discord</span>
+            </a>
+            <a
+              href="https://x.com/iiwish_dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg',
+                'text-text-secondary hover:text-text-primary',
+                'hover:bg-white/5 transition-all duration-200',
+                'text-sm font-medium'
+              )}
+            >
+              <Twitter className="w-4 h-4" />
+              <span className="hidden lg:inline">Twitter</span>
+            </a>
+            
             <div className="w-px h-4 bg-border mx-1" />
             <LanguageSwitcher />
           </div>
@@ -115,6 +144,24 @@ export function Header() {
               >
                 <Github className="w-4 h-4" />
                 <span>GitHub</span>
+              </a>
+              <a
+                href="https://discord.gg/HXhWDkpkQY"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-3 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Discord</span>
+              </a>
+              <a
+                href="https://x.com/iiwish_dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-3 rounded-lg text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"
+              >
+                <Twitter className="w-4 h-4" />
+                <span>Twitter</span>
               </a>
               <div className="px-4 py-2">
                 <LanguageSwitcher />

@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { applyRateLimit } from '@/lib/rate-limit'
 
 export async function GET(request: Request) {
   try {
+    // Apply public rate limiting for read-only endpoints
+    const rateLimitResponse = await applyRateLimit(request, 'public')
+    if (rateLimitResponse) return rateLimitResponse
+    
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 100)
     const offset = parseInt(searchParams.get('offset') || '0')
@@ -46,7 +51,8 @@ export async function GET(request: Request) {
           agent_id: r.agent_id,
           alias: r.alias,
           karma: r.karma,
-          tasks_completed: parseInt(r.tasks_completed) || 0
+          tasks_completed: parseInt(r.tasks_completed) || 0,
+          is_genesis: r.is_genesis || false
         })),
         pagination: {
           total: total || 0,

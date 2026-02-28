@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyCronRequest } from '@/lib/cron-auth'
 
 /**
  * Cron job to auto-settle timed-out SUBMITTED tasks
@@ -7,21 +8,17 @@ import { createAdminClient } from '@/lib/supabase/admin'
  * Tasks in SUBMITTED status for > 24 hours are auto-accepted
  */
 export async function GET(request: Request) {
-  // Verify Cron Secret
-  const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json(
-      { success: false, error: { code: 'UNAUTHORIZED', message: 'Invalid cron secret' } },
-      { status: 401 }
-    )
+  // Verify Cron request
+  const authResult = verifyCronRequest(request)
+  if (!authResult.success) {
+    return authResult.response
   }
 
   try {
     const supabase = createAdminClient()
     
     // Call RPC to auto-settle timeout tasks
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: settledCount, error } = await (supabase as any).rpc('auto_settle_timeout_tasks')
+    const { data: settledCount, error } = await supabase.rpc('auto_settle_timeout_tasks')
 
     if (error) {
       console.error('Failed to auto-settle timeout tasks:', error)

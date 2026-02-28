@@ -24,9 +24,9 @@
 
   /* Text Colors - Much brighter for visibility */
   --text-primary: #ffffff;
-  --text-secondary: #f0f0f5;
-  --text-muted: #c8c8d0;
-  --text-tertiary: #a0a0ac;
+  --text-secondary: #e8e8f0;
+  --text-muted: #b8b8c8;
+  --text-tertiary: #9898a8;
 
   /* Border Colors - Slightly more visible */
   --border: rgba(255, 255, 255, 0.12);

@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { applyRateLimit } from '@/lib/rate-limit'
 
 export async function GET(request: Request) {
   try {
+    // Apply public rate limiting for read-only endpoints
+    const rateLimitResponse = await applyRateLimit(request, 'public')
+    if (rateLimitResponse) return rateLimitResponse
+    
     const { searchParams } = new URL(request.url)
     const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
 

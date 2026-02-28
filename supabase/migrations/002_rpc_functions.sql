@@ -200,6 +200,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- ============================================
 -- Function: settle_task(p_task_id, p_publisher_id, p_accept)
 -- Settle task: accept transfers to solver, reject marks as failed
+-- First 50 solvers get genesis status and bonus (10000 karma)
 -- ============================================
 CREATE OR REPLACE FUNCTION settle_task(
     p_task_id UUID,
@@ -210,9 +211,14 @@ RETURNS JSONB AS $$
 DECLARE
     v_task RECORD;
     v_solver_balance INTEGER;
+    v_solver_is_genesis BOOLEAN;
+    v_solver_completed_count INTEGER;
+    v_genesis_count INTEGER;
     v_publisher_escrow INTEGER;
     v_final_status task_status;
     v_publisher_balance INTEGER;
+    v_genesis_bonus INTEGER := 10000;
+    v_max_genesis INTEGER := 50;
 BEGIN
     -- Get and lock task
     SELECT * INTO v_task
@@ -237,15 +243,69 @@ BEGIN
     IF p_accept THEN
         v_final_status := 'COMPLETED';
         
-        -- Get solver balance and lock
-        SELECT karma_balance INTO v_solver_balance
+        -- Get solver balance, genesis status and lock
+        SELECT karma_balance, is_genesis INTO v_solver_balance, v_solver_is_genesis
         FROM agents WHERE agent_id = v_task.solver_id
         FOR UPDATE;
         
-        -- Transfer to solver
-        UPDATE agents
-        SET karma_balance = karma_balance + v_task.bounty
-        WHERE agent_id = v_task.solver_id;
+        -- Count solver's completed tasks (excluding current one)
+        SELECT COUNT(*) INTO v_solver_completed_count
+        FROM tasks
+        WHERE solver_id = v_task.solver_id AND status = 'COMPLETED';
+        
+        -- Count current genesis agents
+        SELECT COUNT(*) INTO v_genesis_count
+        FROM agents
+        WHERE is_genesis = true;
+        
+        -- First-time completion AND within first 50: mark as genesis and give bonus
+        IF v_solver_completed_count = 0 AND NOT v_solver_is_genesis AND v_genesis_count < v_max_genesis THEN
+            UPDATE agents
+            SET karma_balance = karma_balance + v_task.bounty + v_genesis_bonus,
+                is_genesis = true
+            WHERE agent_id = v_task.solver_id;
+            
+            -- Record task reward transaction
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                p_task_id,
+                'TRANSFER',
+                v_task.bounty,
+                v_solver_balance,
+                v_solver_balance + v_task.bounty,
+                'Task completed reward'
+            );
+            
+            -- Record genesis bonus transaction
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                p_task_id,
+                'TRANSFER',
+                v_genesis_bonus,
+                v_solver_balance + v_task.bounty,
+                v_solver_balance + v_task.bounty + v_genesis_bonus,
+                'Genesis agent bonus - first task completed (first 50)'
+            );
+        ELSE
+            -- Normal transfer to solver
+            UPDATE agents
+            SET karma_balance = karma_balance + v_task.bounty
+            WHERE agent_id = v_task.solver_id;
+            
+            -- Record solver income
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                p_task_id,
+                'TRANSFER',
+                v_task.bounty,
+                v_solver_balance,
+                v_solver_balance + v_task.bounty,
+                'Task completed reward'
+            );
+        END IF;
         
         -- Record solver income
         INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
@@ -333,6 +393,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- ============================================
 -- Function: auto_settle_timeout_tasks()
 -- Auto-settle timed-out SUBMITTED tasks (24h auto-accept)
+-- First 50 solvers get genesis status and bonus
 -- ============================================
 CREATE OR REPLACE FUNCTION auto_settle_timeout_tasks()
 RETURNS INTEGER AS $$
@@ -340,6 +401,11 @@ DECLARE
     v_count INTEGER := 0;
     v_task RECORD;
     v_solver_balance INTEGER;
+    v_solver_is_genesis BOOLEAN;
+    v_solver_completed_count INTEGER;
+    v_genesis_count INTEGER;
+    v_genesis_bonus INTEGER := 10000;
+    v_max_genesis INTEGER := 50;
 BEGIN
     -- Iterate over timeout tasks
     FOR v_task IN 
@@ -348,27 +414,69 @@ BEGIN
           AND settle_timeout_at < NOW()
         FOR UPDATE
     LOOP
-        -- Get solver balance
-        SELECT karma_balance INTO v_solver_balance
+        -- Get solver balance, genesis status
+        SELECT karma_balance, is_genesis INTO v_solver_balance, v_solver_is_genesis
         FROM agents WHERE agent_id = v_task.solver_id
         FOR UPDATE;
         
-        -- Transfer to solver
-        UPDATE agents
-        SET karma_balance = karma_balance + v_task.bounty
-        WHERE agent_id = v_task.solver_id;
+        -- Count solver's completed tasks
+        SELECT COUNT(*) INTO v_solver_completed_count
+        FROM tasks
+        WHERE solver_id = v_task.solver_id AND status = 'COMPLETED';
         
-        -- Record transaction
-        INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
-        VALUES (
-            v_task.solver_id,
-            v_task.task_id,
-            'TRANSFER',
-            v_task.bounty,
-            v_solver_balance,
-            v_solver_balance + v_task.bounty,
-            'Auto-settled after timeout'
-        );
+        -- Count current genesis agents
+        SELECT COUNT(*) INTO v_genesis_count
+        FROM agents
+        WHERE is_genesis = true;
+        
+        -- First-time completion AND within first 50: mark as genesis and give bonus
+        IF v_solver_completed_count = 0 AND NOT v_solver_is_genesis AND v_genesis_count < v_max_genesis THEN
+            UPDATE agents
+            SET karma_balance = karma_balance + v_task.bounty + v_genesis_bonus,
+                is_genesis = true
+            WHERE agent_id = v_task.solver_id;
+            
+            -- Record task reward transaction
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                v_task.task_id,
+                'TRANSFER',
+                v_task.bounty,
+                v_solver_balance,
+                v_solver_balance + v_task.bounty,
+                'Auto-settled after timeout'
+            );
+            
+            -- Record genesis bonus transaction
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                v_task.task_id,
+                'TRANSFER',
+                v_genesis_bonus,
+                v_solver_balance + v_task.bounty,
+                v_solver_balance + v_task.bounty + v_genesis_bonus,
+                'Genesis agent bonus - first task completed (first 50, auto)'
+            );
+        ELSE
+            -- Normal transfer to solver
+            UPDATE agents
+            SET karma_balance = karma_balance + v_task.bounty
+            WHERE agent_id = v_task.solver_id;
+            
+            -- Record transaction
+            INSERT INTO transactions (agent_id, task_id, tx_type, amount, balance_before, balance_after, description)
+            VALUES (
+                v_task.solver_id,
+                v_task.task_id,
+                'TRANSFER',
+                v_task.bounty,
+                v_solver_balance,
+                v_solver_balance + v_task.bounty,
+                'Auto-settled after timeout'
+            );
+        END IF;
         
         -- Reduce publisher escrow
         UPDATE agents
@@ -397,7 +505,8 @@ RETURNS TABLE (
     agent_id UUID,
     alias VARCHAR(64),
     karma INTEGER,
-    tasks_completed BIGINT
+    tasks_completed BIGINT,
+    is_genesis BOOLEAN
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -406,7 +515,8 @@ BEGIN
         a.agent_id,
         a.alias,
         a.karma_balance AS karma,
-        COALESCE(t.completed_count, 0) AS tasks_completed
+        COALESCE(t.completed_count, 0) AS tasks_completed,
+        a.is_genesis
     FROM agents a
     LEFT JOIN (
         SELECT solver_id, COUNT(*) AS completed_count

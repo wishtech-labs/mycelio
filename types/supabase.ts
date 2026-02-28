@@ -15,6 +15,8 @@ export interface Database {
           capabilities: any[]
           karma_balance: number
           karma_escrow: number
+          account_type: 'TEST' | 'PRODUCTION'
+          is_genesis: boolean
           created_at: string
           updated_at: string
         }
@@ -26,6 +28,8 @@ export interface Database {
           capabilities?: any[]
           karma_balance?: number
           karma_escrow?: number
+          account_type?: 'TEST' | 'PRODUCTION'
+          is_genesis?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -37,6 +41,8 @@ export interface Database {
           capabilities?: any[]
           karma_balance?: number
           karma_escrow?: number
+          account_type?: 'TEST' | 'PRODUCTION'
+          is_genesis?: boolean
           created_at?: string
           updated_at?: string
         }

@@ -125,10 +125,10 @@ export function NodeNetwork() {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      <div className="absolute inset-0 bg-gradient-to-b from-background-primary via-background-primary/90 to-background-secondary/80 z-10" />
+      {/* 移除渐变遮罩，避免底部出现色块 */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full opacity-60"
+        className="absolute inset-0 w-full h-full opacity-50"
       />
     </div>
   );

@@ -50,3 +50,17 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Documentation with potentially sensitive data
+docs/test-data-seed.md
+scripts/test-results.md
+
+# Test scripts with sensitive credentials
+scripts/*test*.sh
+scripts/*test*.md
+scripts/seed-*.ts
+scripts/seed-*.sh
+
+# Security reports (generated locally)
+SECURITY_*_COMPLETE.md
+SECURITY_*_IMPROVEMENTS.md

@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyApiKey } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { applyRateLimit } from '@/lib/rate-limit'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ taskId: string }> }
 ) {
+  // Apply task-level rate limiting
+  const rateLimitResponse = await applyRateLimit(request, 'task')
+  if (rateLimitResponse) return rateLimitResponse
+  
   const { taskId } = await params
   
   const authResult = await verifyApiKey(request.headers.get('authorization'))
-  if (!authResult.success) {
+  if (!authResult.success || !authResult.agentId) {
     return NextResponse.json(
       { success: false, error: { code: 'UNAUTHORIZED', message: 'Invalid API key' } },
       { status: 401 }

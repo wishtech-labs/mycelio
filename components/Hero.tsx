@@ -1,7 +1,6 @@
 'use client';
 
 import { Container } from '@/components/ui';
-import { Typewriter } from '@/components/animations';
 import { NodeNetwork } from '@/components/NodeNetwork';
 import { useI18n } from '@/lib/i18n-context';
 
@@ -9,63 +8,54 @@ export function Hero() {
   const { t } = useI18n();
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-4 overflow-hidden bg-background-primary dark">
+    <section className="relative h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-background-primary dark">
       {/* Background Effects */}
       <NodeNetwork />
       
-      {/* Animated gradient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] animate-pulse" aria-hidden="true" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} aria-hidden="true" />
+      {/* Gradient orbs - 增强亮度 */}
+      <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-purple-600/15 rounded-full blur-[150px] animate-pulse" aria-hidden="true" />
+      <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-blue-600/12 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} aria-hidden="true" />
       
       <Container size="lg" className="relative z-10 text-center flex flex-col items-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-colors shadow-lg shadow-purple-500/10">
-          <span className="relative flex h-2.5 w-2.5">
+        {/* Badge - 更精致的样式 */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm">
+          <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75 animate-ping" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-purple-500" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-400" />
           </span>
-          <span className="text-sm text-text-secondary font-medium tracking-wide uppercase">{t('badge')}</span>
+          <span className="text-sm text-purple-200 font-medium tracking-wide">{t('badge')}</span>
         </div>
 
-        {/* Main Title */}
-        <h1 className="font-sans text-6xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 mb-6 tracking-tighter">
-          {t('title')}<br />
-          <span className="bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">{t('titleHighlight')}</span>
+        {/* Main Title - 纯白色更醒目 */}
+        <h1 className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-2 tracking-tight">
+          {t('title')}
         </h1>
-
-        {/* Subtitle with Typewriter Effect */}
-        <h2 className="font-sans text-2xl md:text-3xl text-text-secondary mb-8 min-h-[3rem] font-light tracking-tight">
-          <Typewriter 
-            text={t('subtitle')}
-            speed={40}
-          />
+        
+        {/* Title Highlight - 高对比度渐变 */}
+        <h2 className="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-10 tracking-tight">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300">
+            {t('titleHighlight')}
+          </span>
         </h2>
 
-        {/* Description */}
-        <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto mb-12 leading-relaxed">
-          {t('description')}{' '}
-          <span className="text-text-secondary font-semibold ml-1">{t('descriptionHighlight')}</span>{' '}
-          {t('descriptionEnd')}
+        {/* Subtitle - 提高对比度 */}
+        <p className="text-lg md:text-xl text-text-secondary max-w-lg mx-auto mb-12 leading-relaxed">
+          {t('subtitle')}
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <a 
-            href="https://github.com/wishtech-labs/mycelio-hub"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] cursor-pointer"
-          >
-            {t('startBtn')}
-          </a>
-          <a 
-            href="/docs"
-            className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-sm hover:bg-white/5 transition-colors cursor-pointer"
-          >
-            {t('readDocs')}
-          </a>
-        </div>
+        {/* CTA Button - 更现代的样式 */}
+        <a 
+          href="/docs"
+          className="group relative inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-black font-semibold text-sm hover:bg-gray-50 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.35)] hover:scale-105 active:scale-95"
+        >
+          {t('startBtn')}
+        </a>
       </Container>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <div className="w-px h-10 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
+      </div>
     </section>
   );
 }

@@ -217,67 +217,30 @@ export class A2ATaskService {
   /**
    * Cancel a task (A2A: tasks/cancel)
    * Note: Only OPEN tasks can be cancelled in Mycelio
+   * 
+   * Uses atomic RPC function to prevent race conditions:
+   * - Locks task row with FOR UPDATE
+   * - Locks agent row with FOR UPDATE
+   * - Performs refund and deletion in single transaction
    */
   async cancelTask(params: TaskIdParams & { publisherId: string }): Promise<Task | null> {
-    // Find the task
-    const { data: task, error: findError } = await this.supabase
-      .from('tasks')
-      .select('*')
-      .filter('payload_prompt->>a2a_task_id', 'eq', params.id)
-      .eq('publisher_id', params.publisherId)
-      .single();
-
-    if (findError || !task) {
-      return null;
-    }
-
+    // Use atomic RPC function to prevent race conditions
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const taskData = task as any;
+    const { data, error } = await (this.supabase as any).rpc('cancel_task_atomic', {
+      p_task_a2a_id: params.id,
+      p_publisher_id: params.publisherId
+    });
 
-    // Only OPEN tasks can be "cancelled" by deleting
-    if (taskData.status !== 'OPEN') {
-      throw new Error('Task cannot be cancelled - already claimed or completed');
+    if (error) {
+      throw new Error(`Failed to cancel task: ${error.message}`);
     }
 
-    // Refund the bounty (unfreeze karma)
-    const { data: agent } = await this.supabase
-      .from('agents')
-      .select('karma_balance, karma_escrow')
-      .eq('agent_id', params.publisherId)
-      .single();
-
-    if (agent) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const agentData = agent as any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (this.supabase as any)
-        .from('agents')
-        .update({
-          karma_balance: agentData.karma_balance + taskData.bounty,
-          karma_escrow: agentData.karma_escrow - taskData.bounty
-        })
-        .eq('agent_id', params.publisherId);
-
-      // Record unfreeze transaction
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (this.supabase as any)
-        .from('transactions')
-        .insert({
-          agent_id: params.publisherId,
-          task_id: taskData.task_id,
-          tx_type: 'UNFREEZE',
-          amount: taskData.bounty,
-          balance_before: agentData.karma_balance,
-          balance_after: agentData.karma_balance + taskData.bounty,
-          description: 'Task cancelled - bounty refunded'
-        });
+    if (!data.success) {
+      if (data.error === 'TASK_NOT_FOUND') {
+        return null;
+      }
+      throw new Error(data.message || 'Failed to cancel task');
     }
-
-    // Delete the task
-    await this.supabase
-      .from('tasks')
-      .delete()
-      .eq('task_id', taskData.task_id);
 
     return {
       id: params.id,
