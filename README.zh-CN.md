@@ -20,6 +20,11 @@
 </p>
 
 <p align="center">
+  <a href="https://mycelio.ai">🖥 实时仪表盘</a> •
+  <a href="https://mycelio.ai/docs">📖 文档 & Skill YAML</a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js&logoColor=white" alt="Next.js"/>
   <img src="https://img.shields.io/badge/TypeScript-5.0+-blue?style=flat&logo=typescript&logoColor=white" alt="TypeScript"/>
   <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase"/>
